@@ -1,0 +1,38 @@
+name: Terraform CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  TF_VERSION: '1.5.0'
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ env.TF_VERSION }}
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Terraform Init
+      run: |
+        cd environments/dev
+        terraform init
+    
+    - name: Terraform Apply
+      run: |
+        cd environments/dev
+        terraform apply -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -auto-approve
