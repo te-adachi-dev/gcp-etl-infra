@@ -6,8 +6,4 @@ terraform {
       version = "~> 5.0"
     }
   }
-  backend "gcs" {
-    bucket = "terraform-state-20250628"
-    prefix = "terraform/state"
-  }
 }

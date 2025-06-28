@@ -3,24 +3,24 @@ provider "google" {
   region  = var.region
 }
 
-# State管理用のバケット
-resource "google_storage_bucket" "terraform_state" {
-  name     = "terraform-state-20250628"
-  location = var.region
-  
-  versioning {
-    enabled = true
-  }
-  
-  lifecycle_rule {
-    condition {
-      age = 30
-    }
-    action {
-      type = "Delete"
-    }
-  }
-}
+# State管理用のバケットは既に手動で作成済みなのでコメントアウト
+# resource "google_storage_bucket" "terraform_state" {
+#   name     = "terraform-state-20250628"
+#   location = var.region
+#   
+#   versioning {
+#     enabled = true
+#   }
+#   
+#   lifecycle_rule {
+#     condition {
+#       age = 30
+#     }
+#     action {
+#       type = "Delete"
+#     }
+#   }
+# }
 
 # データレイク用ストレージ
 module "storage" {

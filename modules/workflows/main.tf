@@ -28,7 +28,7 @@ resource "google_workflows_workflow" "data_pipeline" {
                 - logFile:
                     call: sys.log
                     args:
-                      text: $${"Processing file: " + file.name}
+                      text: "Processing file"
         
         - complete:
             return: "Workflow completed successfully"
