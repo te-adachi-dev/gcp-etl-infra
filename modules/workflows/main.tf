@@ -12,7 +12,7 @@ resource "google_workflows_workflow" "data_pipeline" {
             assign:
               - project: ${var.project_id}
               - location: ${var.region}
-              - bucket: "test-workflow-bucket-20250628"
+              - bucket: "${var.environment}-input-bucket-20250628"
         
         - checkBucket:
             call: googleapis.storage.v1.objects.list
@@ -40,8 +40,14 @@ resource "google_service_account" "workflow_sa" {
   display_name = "Workflow Service Account"
 }
 
-resource "google_project_iam_member" "workflow_sa_binding" {
+resource "google_project_iam_member" "workflow_sa_storage" {
   project = var.project_id
   role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.workflow_sa.email}"
+}
+
+resource "google_project_iam_member" "workflow_sa_logging" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.workflow_sa.email}"
 }
